@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
-import websocket
+import json
 import requests
+import websocket
+
 
 def get_token(room):
     print("Making token request")
@@ -9,6 +11,7 @@ def get_token(room):
     result = r.json()
     token = result['result']
     return token
+
 
 def connect_socket():
     header = [
@@ -27,13 +30,23 @@ def connect_socket():
         subprotocols=["tc"]
     )
 
+
 def connect_room(room, nickname):
     # This packet's structure MUST not be changed.
-    connect_msg = '{"tc":"join","req":1,"useragent":"tinychat-client-webrtc-chrome_win32-2.0.9-255","token":"' + get_token(room) + '","room":"' + room + '","nick": "'+ nickname +'"}'
+    connect_msg = json.dumps({
+        'tc': 'join',
+        'req': 1,
+        'useragent': 'tinychat-client-webrtc-chrome_win32-2.0.9-255',
+        'token': get_token(room),
+        'room': room,
+        'nick': nickname
+    })
     send_msg(connect_msg)
+
 
 def send_msg(msg):
     ws.send(msg)
+
 
 if __name__ == "__main__":
     room = input("What room? ")
