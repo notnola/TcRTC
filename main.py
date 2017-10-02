@@ -3,7 +3,7 @@
 import websocket
 import requests
 
-def get_token():
+def get_token(room):
     print("Making token request")
     r = requests.get('https://tinychat.com/api/v1.0/room/token/' + room)
     result = r.json()
@@ -27,9 +27,9 @@ def connect_socket():
         subprotocols=["tc"]
     )
 
-def connect_room():
+def connect_room(room, nickname):
     # This packet's structure MUST not be changed.
-    connect_msg = '{"tc":"join","req":1,"useragent":"tinychat-client-webrtc-chrome_win32-2.0.9-255","token":"' + get_token() + '","room":"' + room + '","nick": "'+ nickname +'"}'
+    connect_msg = '{"tc":"join","req":1,"useragent":"tinychat-client-webrtc-chrome_win32-2.0.9-255","token":"' + get_token(room) + '","room":"' + room + '","nick": "'+ nickname +'"}'
     send_msg(connect_msg)
 
 def send_msg(msg):
@@ -41,7 +41,7 @@ if __name__ == "__main__":
 
     ws = websocket.WebSocket()
     connect_socket()
-    connect_room()
+    connect_room(room, nickname)
 
     while True:
         print(ws.next())
