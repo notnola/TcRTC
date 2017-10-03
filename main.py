@@ -45,8 +45,12 @@ def connect_room(room, nickname):
 
 def on_msg(msg):
     print(msg)
-    if msg['tc'] == 'ping':
+    msg_type = msg['tc']
+    if msg_type == 'ping':
         send_msg({
+            # The next line doesn't seem to do anything, but
+            # nortxort/pinylib-rtc includes it. Further investigation needed.
+            # 'req': 1,
             'tc': 'pong'
         })
 
