@@ -33,7 +33,7 @@ def connect_socket():
 
 def connect_room(room, nickname):
     # This packet's structure MUST not be changed.
-    connect_msg = json.dumps({
+    send_msg({
         'tc': 'join',
         'req': 1,
         'useragent': 'tinychat-client-webrtc-chrome_win32-2.0.9-255',
@@ -41,19 +41,20 @@ def connect_room(room, nickname):
         'room': room,
         'nick': nickname
     })
-    send_msg(connect_msg)
 
 
 def on_msg(msg):
     print(msg)
     if msg['tc'] == 'ping':
-        send_msg(json.dumps({
+        send_msg({
             'tc': 'pong'
-        }))
+        })
 
 
 def send_msg(msg):
-    ws.send(msg)
+    '''Sends a json message to the Tinychat server.
+    `msg` must be a value compatible with json.dumps.'''
+    ws.send(json.dumps(msg))
 
 
 if __name__ == "__main__":
