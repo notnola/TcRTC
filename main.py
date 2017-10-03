@@ -44,6 +44,14 @@ def connect_room(room, nickname):
     send_msg(connect_msg)
 
 
+def on_msg(msg):
+    print(msg)
+    if msg['tc'] == 'ping':
+        send_msg(json.dumps({
+            'tc': 'pong'
+        }))
+
+
 def send_msg(msg):
     ws.send(msg)
 
@@ -57,4 +65,5 @@ if __name__ == "__main__":
     connect_room(room, nickname)
 
     while True:
-        print(ws.next())
+        msg = json.loads(ws.next())
+        on_msg(msg)
