@@ -6,6 +6,14 @@ import websocket
 
 
 def get_token(room):
+    """
+    Request a token from a Tinychat room.
+
+    :param room: The room to request a token from.
+    :type room: str
+    :return: Room token.
+    :rtype: str
+    """
     print("Making token request")
     r = requests.get('https://tinychat.com/api/v1.0/room/token/' + room)
     result = r.json()
@@ -14,6 +22,9 @@ def get_token(room):
 
 
 def connect_socket():
+    """
+    Connect to the Tinychat websocket.
+    """
     header = [
         'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3040.0 Safari/537.36',
         'Accept-Language: en-US,en;q=0.8',
@@ -32,6 +43,14 @@ def connect_socket():
 
 
 def connect_room(room, nickname):
+    """
+    Connect to a room.
+
+    :param room: The room to join.
+    :type room: str
+    :param nickname: The nickname for the bot to appear as.
+    :type nickname: str
+    """
     # This packet's structure MUST not be changed.
     send_msg({
         'tc': 'join',
@@ -44,6 +63,12 @@ def connect_room(room, nickname):
 
 
 def on_msg(msg):
+    """
+    Main message handler.
+
+    :param msg: The message object.
+    :type msg: dict
+    """
     print(msg)
     msg_type = msg['tc']
     if msg_type == 'ping':
@@ -56,8 +81,12 @@ def on_msg(msg):
 
 
 def send_msg(msg):
-    '''Sends a json message to the Tinychat server.
-    `msg` must be a value compatible with json.dumps.'''
+    """
+    Sends a json message to the Tinychat server.
+    
+    :param msg: The object to send. Must be serializable to json.
+    :type msg: dict | object
+    """
     ws.send(json.dumps(msg))
 
 
