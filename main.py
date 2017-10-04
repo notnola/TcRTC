@@ -95,8 +95,6 @@ class TinychatClient(object):
         :type msg: dict | object
         """
         msg['req'] = self._req
-        # TODO: Remove this line.
-        print('Sending: {0}'.format(json.dumps(msg)))
         self._ws.send(json.dumps(msg))
 
         self._req += 1
