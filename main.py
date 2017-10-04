@@ -83,9 +83,10 @@ class TinychatClient(object):
         print(msg)
         msg_type = msg['tc']
         if msg_type == 'ping':
-            self.send_msg({
-                'tc': 'pong'
-            })
+            self.on_ping()
+
+    def on_ping(self):
+        self.send_msg({'tc': 'pong'})
 
     def send_msg(self, msg):
         """
