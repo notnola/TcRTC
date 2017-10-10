@@ -14,6 +14,7 @@ class TinychatClient(object):
 
         self._ws = None
         self._req = 1
+        self._users = {}
 
     def connect_room(self):
         """
@@ -72,7 +73,20 @@ class TinychatClient(object):
         while True:
             msg = json.loads(self._ws.next())
             self.on_msg(msg)
-
+    
+    def on_join(self, msg):
+        """
+        Handles join messages from the server.
+        
+        :param msg: The message object.
+        :type msg: dict
+        """
+        user_info = msg.copy()
+        del user_info['tc']
+        user_handle = user_info.pop('handle', None)
+        self._users[user_handle] = user_info
+        print([self._users[handle]['nick'] for handle in self._users])
+    
     def on_msg(self, msg):
         """
         Main message handler.
@@ -82,11 +96,56 @@ class TinychatClient(object):
         """
         print(msg)
         msg_type = msg['tc']
-        if msg_type == 'ping':
-            self.send_msg({
-                'tc': 'pong'
-            })
+        if msg_type == 'join':
+            self.on_join(msg)
+        elif msg_type == 'nick':
+            self.on_nick(msg)
+        elif msg_type == 'ping':
+            self.on_ping()
+        elif msg_type == 'quit':
+            self.on_quit(msg)
+        elif msg_type == 'userlist':
+            self.on_userlist(msg)
 
+    def on_nick(self, msg):
+        """
+        Handles nick messages from the server.
+
+        :param msg: The message object.
+        :type msg: dict
+        """
+        user_handle = msg['handle']
+        new_nick = msg['nick']
+        self._users[user_handle]['nick'] = new_nick
+        print([self._users[handle]['nick'] for handle in self._users])
+
+    def on_ping(self):
+        self.send_msg({'tc': 'pong'})
+    
+    def on_quit(self, msg):
+        """
+        Handles quit messages from the server.
+
+        :param msg: The message object.
+        :type msg: dict
+        """
+        user_handle = msg['handle']
+        del self._users[user_handle]
+        print([self._users[handle]['nick'] for handle in self._users])
+
+    def on_userlist(self, msg):
+        """
+        Handles userlist messages from the server.
+
+        :param msg: The message object.
+        :type msg: dict
+        """
+        for user in msg['users']:
+            user_info = user.copy()
+            user_handle = user_info.pop('handle', None)
+            self._users[user_handle] = user_info
+        print([self._users[handle]['nick'] for handle in self._users])
+        
     def send_msg(self, msg):
         """
         Sends a json message to the Tinychat server.
@@ -95,8 +154,6 @@ class TinychatClient(object):
         :type msg: dict | object
         """
         msg['req'] = self._req
-        # TODO: Remove this line.
-        print('Sending: {0}'.format(json.dumps(msg)))
         self._ws.send(json.dumps(msg))
 
         self._req += 1
