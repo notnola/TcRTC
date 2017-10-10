@@ -1,5 +1,5 @@
 # TcRTC
-Python 3 module to interface with Tinychat's WebRTC client. 
+Python 3 module to interface with Tinychat's WebRTC service. 
 
 ### Requirements:
 - [Python 3](https://www.python.org/)
@@ -10,7 +10,11 @@ Python 3 module to interface with Tinychat's WebRTC client.
     https://github.com/requests/requests
     )
 
+### Contributors 
+notnola - https://github.com/notnola
+Carter Hinsley - https://github.com/kvazau
+
+
 ### Notes:
-As of now, this is just a proof of concept. The socket connection WILL die as
-TcRTC does not yet respond to the server's PING messages. 
+This is a work in progress. Stay tuned for future updates. Also, we ask you to star this project to show support. 
 
