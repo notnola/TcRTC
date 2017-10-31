@@ -1,7 +1,7 @@
 # TcRTC
 Python 3 module to interface with Tinychat's WebRTC service. 
 
-### Requirements:
+### Requirements
 - [Python 3](https://www.python.org/)
 - [websocket-client library (`pip3 install websocket-client`)](
     https://github.com/websocket-client/websocket-client
@@ -15,6 +15,6 @@ notnola - https://github.com/notnola
 Carter Hinsley - https://github.com/kvazau
 
 
-### Notes:
-This is a work in progress. Stay tuned for future updates. Also, we ask you to star this project to show support. 
+### Notes
+- This is a work in progress. Stay tuned for future updates. Also, we ask you to star this project to show support. 
 
